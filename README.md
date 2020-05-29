@@ -85,3 +85,64 @@
    
 - Now we can use the connectionString directly in the sql connection as below
    `SqlConnection connection = new SqlConnection(connectionString)`
+   
+---
+
+## SQL COMMAND in ADO.NET
+
+- SqlCommand is used to prepare SQL statement or stored procedure that we want to execute on a SQL Server Database.
+
+### ExecuteReader
+
+      - we use it when our query returns more than single value. 
+      - For example, if the query returns rows of data.
+      
+### ExecuteNonQuery
+
+      - Used to perform insert, update or delete operation.
+      - ExecuteNonQuery is integer type it returns the total number of rows affected.
+
+### ExecuteScalar 
+
+      - used when query retuns a single value. 
+      - For example, query returns total number of rows in a table.  
+      - Generally ExecuteScalar is object type we type cast it depending upon the output.          
+      
+- Example:
+
+            string connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand();
+
+                //Example for ExecuteReader
+                cmd.CommandText = "select * from inventory";
+                cmd.Connection = con;
+                con.Open();
+                GridView1.DataSource = cmd.ExecuteReader();
+                GridView1.DataBind();
+                con.Close();
+
+                //Example for ExecuteNonQuery
+                cmd.CommandText = "Insert into inventory values(4,'Pingili', 'Sathyanarayana Reddy')";
+                con.Open();
+                int rowsEffected = cmd.ExecuteNonQuery();
+                Response.Write("Execute Non Query: " + rowsEffected.ToString());
+                con.Close();
+
+                //Example for ExecuteScalar
+                cmd.CommandText = "Select count(PersonID) from inventory";
+                con.Open();
+                int rowsValue = (int)cmd.ExecuteScalar();
+                Response.Write("Execute Scalar: " + rowsValue.ToString());
+            }
+
+
+
+
+
+
+
+
+
+
