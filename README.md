@@ -12,17 +12,18 @@
    > Data Provider for ODBC - System.Data.Odbc  
 
 **SQL Connections**
-   > - A SqlConnection objects represents a unique session to the SQL server data source.
+
+    - A SqlConnection objects represents a unique session to the SQL server data source.
    
-   > - With a client/server database system, it is equivalent to a network connection to the server.
+    - With a client/server database system, it is equivalent to a network connection to the server.
    
-   > - SqlConnection is used together with SqlDataAdapter and SqlCommand to increase performance when 
+    - SqlConnection is used together with SqlDataAdapter and SqlCommand to increase performance when 
        connecting to a Microsoft SQL Server database.
        
-   > - If the SqlConnection goes out of scope, it won't be closed. Therefore, you must explicitly close
+    - If the SqlConnection goes out of scope, it won't be closed. Therefore, you must explicitly close
        the connection by calling **Close or Dispose**.
        
-   > - To ensure that connections are always closed, open the connection inside of a using block, 
+    - To ensure that connections are always closed, open the connection inside of a using block, 
        as shown in the following code fragment. Doing so ensures that the connection is automatically closed
        when the code exits the block. So there won't be any need for using the connection.close().
        
@@ -32,7 +33,7 @@
               // Do work here; connection closed on following line.
            }
        
-   > - You can also do it using exception handling where we will close the connection in the finally block so it will always execute 
+    - You can also do it using exception handling where we will close the connection in the finally block so it will always execute 
        irrespective of the scenario.   
        
             try  
