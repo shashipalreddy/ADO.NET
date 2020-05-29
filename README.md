@@ -10,6 +10,7 @@
    > Data Provider for Oracle Server - System.Data.OracleClient  
    > Data Provider for OLEDB - System.Data.OleDb  
    > Data Provider for ODBC - System.Data.Odbc  
+---
 
 **SQL Connections**
 
@@ -54,3 +55,33 @@
 **What are the 2 uses of an using statement in c# ?**
 - To import namespaces . Example: using System;
 - To close connection properly as show in the above example.
+---
+
+**Storing and Reading connection strings in a configuration file**
+
+- we can also store the connection string in the configuration file. 
+
+- So that if there are any changes we can make a change in the configuration file directly and only
+  in one file place instead of finding it in multiple location of the code.
+  
+- For web forms it will be **web.config** and for windows applications it will be **app.config**.
+
+        1. <connectionStrings>
+             <add name="myConnectionString" connectionString="server=localhost;database=myDb;uid=myUser;password=myPass;" />
+           </connectionStrings>
+   
+        (or)
+        2. <connectionStrings>
+             <add name="myConnectionString" connectionString="data source=.; database=sample; integrated security=SSPI" />
+           </connectionStrings>
+        
+- The 1st way is used with SQL authentication and 2nd way is used with Windows Authentication.
+
+- we will read the connection string from the configuration file by first importing the  
+   `using System.Configuration;`.
+
+- Then in the code to read connection string use the configurationManager class  
+   `string connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;`
+   
+- Now we can use the connectionString directly in the sql connection as below
+   `SqlConnection connection = new SqlConnection(connectionString)`
