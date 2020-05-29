@@ -106,7 +106,8 @@
 
       - used when query retuns a single value. 
       - For example, query returns total number of rows in a table.  
-      - Generally ExecuteScalar is object type we type cast it depending upon the output.          
+      - Generally ExecuteScalar is object type we type cast it depending upon the output. 
+      - In the below example we type cast it to int becuase we expect int to returned by the query.
       
 - Example:
 
@@ -124,7 +125,7 @@
                 con.Close();
 
                 //Example for ExecuteNonQuery
-                cmd.CommandText = "Insert into inventory values(4,'Pingili', 'Sathyanarayana Reddy')";
+                cmd.CommandText = "Insert into inventory values(2,'Pingili', 'Shashipal Reddy')";
                 con.Open();
                 int rowsEffected = cmd.ExecuteNonQuery();
                 Response.Write("Execute Non Query: " + rowsEffected.ToString());
