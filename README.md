@@ -137,6 +137,77 @@
                 int rowsValue = (int)cmd.ExecuteScalar();
                 Response.Write("Execute Scalar: " + rowsValue.ToString());
             }
+---
+
+## Sql Injection
+
+- The Sql injection will happen if we concatenate the value to the query.
+
+- So in order to eliminate the SQL injection we use either Parameterized Query or a Stored Procedure.
+
+- Best Practice will be to use the stored procedure.
+
+---
+
+## How to use Stored Procedure with output parameters
+
+- First create a table Named Employee using create query where we have employee id which is identity.
+
+         create table Employee(
+            EmployeeID int identity primary key,
+            Name varchar(250),
+            Gender varchar(250),
+            Salary int
+         )
+            
+- Next Create a stored Procedure for inserting Employee into the table.
+
+         Create Procedure spAddEmployee
+         @Name varchar(250),
+         @Gender varchar(250),
+         @Salary int,
+         @EmpID int out
+         as
+         Begin 
+            Insert into Employee values(@Name,@Gender,@Salary);
+            select @EmpID = SCOPE_IDENTITY();
+         End
+         
+- Now we can make use of the stored procedure in the code to insert values into the table
+
+          cmd.CommandText = "spAddEmployee";
+          cmd.Connection = con;
+          cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+          cmd.Parameters.AddWithValue("@Name", "Shashipal reddy Pingili");
+          cmd.Parameters.AddWithValue("@Gender", "Male");
+          cmd.Parameters.AddWithValue("@Salary", 5000);
+
+          SqlParameter outputParameter = new SqlParameter();
+          outputParameter.ParameterName = "@EmpID";
+          outputParameter.SqlDbType = System.Data.SqlDbType.Int;
+          outputParameter.Direction = System.Data.ParameterDirection.Output;
+          cmd.Parameters.Add(outputParameter);
+
+          con.Open();
+          cmd.ExecuteNonQuery();
+          
+- we have EmpID as a output parameter so we make use of 
+            
+            - ParameterName to know which parameter is an output parameter
+            - SqlDbType to know the parameter of which data type
+            - Direction to know wheter it is an input or output
+
+
+
+
+
+
+
+
+
+
+
 
 
 
