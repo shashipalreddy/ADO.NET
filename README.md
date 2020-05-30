@@ -254,8 +254,33 @@
 
 - In the above code example i am adding an extra column named *IncrementedSalary* to the gridview.
 
+## SqlDataReader using NextResult
 
+- If your statement/proc is returning multiple result sets, For example, if you have two select statements in single Command object,       then you will get back two result sets
 
+- When there are two select statements which are getting the data to the **rdr** we use NextResult to get the other table data.
+
+- In the below example the data of the first table is assigned to gridview1 and the NextResult will move the cursor to the 
+  other table so we bind that table to gridview2.
+
+         string connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
+         using (SqlConnection con = new SqlConnection(connectionString))
+         {
+             SqlCommand cmd = new SqlCommand("select * from Employee; Select * from inventory;", con);
+             con.Open();
+             using (SqlDataReader rdr = cmd.ExecuteReader())
+             {
+                 GridView1.DataSource = rdr;
+                 GridView1.DataBind();
+
+                 while (rdr.NextResult())
+                 {
+                     GridView2.DataSource = rdr;
+                     GridView2.DataBind();
+                 }
+             }
+
+         }
 
 
 
