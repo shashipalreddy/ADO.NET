@@ -282,9 +282,21 @@
 
          }
 
+---
 
+## SqlDataAdapter
 
+- SqlDataReader is connection-oriented, meaning it requires an active and open connection to the data source.
 
+- SqlDataAdapter and Dataset provides us with a disconnected data access model.
+
+- We can create a instance of SqlDataAdapter using a new keyword.
+
+- SqlDataAdapter contains
+   
+   1. The Sql Command that we want to execute.
+   2. The Connection on which we execute the command.
+  
 
 
 
