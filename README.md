@@ -194,9 +194,9 @@
           
 - we have EmpID as a output parameter so we make use of 
             
-            - ParameterName to know which parameter is an output parameter
-            - SqlDbType to know the parameter of which data type
-            - Direction to know wheter it is an input or output
+         - ParameterName to know which parameter is an output parameter
+         - SqlDbType to know the parameter of which data type
+         - Direction to know wheter it is an input or output
 ---
 
 ## SQLDataReader
@@ -217,9 +217,42 @@
 
 - SqlDataReader must be closed in a timely fashion, there are two ways to close the SqlDataReader **Using** and **Finally** block.
 
+- Usage of SqlDataReader with example code:
 
+      string connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
+      using (SqlConnection con = new SqlConnection(connectionString))
+      {
+          SqlCommand cmd = new SqlCommand("Select * from Employee", con);
+          con.Open();
+          using (SqlDataReader rdr = cmd.ExecuteReader())
+          {
+              DataTable dataTable = new DataTable();
+              dataTable.Columns.Add("EmployeeID");
+              dataTable.Columns.Add("Name");
+              dataTable.Columns.Add("Gender");
+              dataTable.Columns.Add("Salary");
+              dataTable.Columns.Add("IncrementedSalary");
+              while (rdr.Read())
+              {
+                  DataRow dataRow = dataTable.NewRow();
+                  int originalSalary = Convert.ToInt32(rdr["Salary"]);
+                  double incrementSalary = originalSalary + originalSalary * 0.15;
 
+                  dataRow["EmployeeID"] = rdr["EmployeeID"];
+                  dataRow["Name"] = rdr["Name"];
+                  dataRow["Gender"] = rdr["Gender"];
+                  dataRow["Salary"] = rdr["Salary"];
+                  dataRow["IncrementedSalary"] = incrementSalary;
+                  dataTable.Rows.Add(dataRow);
 
+              }
+              GridView1.DataSource = dataTable;
+              GridView1.DataBind();
+          }
+
+      }
+
+- In the above code example i am adding an extra column named *IncrementedSalary* to the gridview.
 
 
 
