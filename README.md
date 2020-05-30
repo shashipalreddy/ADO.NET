@@ -297,7 +297,44 @@
    1. The Sql Command that we want to execute.
    2. The Connection on which we execute the command.
   
+**DataSet**
 
+- Dataset is an in memory representation of database.
+
+- Dataset can store tables and relation between them same as Database.
+
+- But Database store them in the hard disk but dataset store them in the memory of web server.
+
+**How fill method is used?**
+
+- It open the connection.
+
+- executes the command on the sql server
+
+- reads the data and fills that in the dataset.
+
+- closes the connection immediately.
+
+**Example with usage of SqlDataAdapter and DataSet but with multiples resultset(i.e.., using two select statements)**
+
+      string connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
+      using (SqlConnection con = new SqlConnection(connectionString))
+      {
+          SqlDataAdapter da = new SqlDataAdapter("select * from Employee; Select * from inventory;", con);
+          DataSet ds = new DataSet();
+          da.Fill(ds);
+
+          //To give meaningful names to a table when it returns multiple result sets
+          ds.Tables[0].TableName = "Employee";
+          ds.Tables[1].TableName = "Inventory";
+
+          GridView1.DataSource = ds.Tables["Employee"];
+          GridView1.DataBind();
+
+          GridView2.DataSource = ds.Tables["Inventory"];
+          GridView2.DataBind();
+
+      }
 
 
 
