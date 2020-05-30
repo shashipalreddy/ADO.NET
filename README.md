@@ -197,7 +197,25 @@
             - ParameterName to know which parameter is an output parameter
             - SqlDbType to know the parameter of which data type
             - Direction to know wheter it is an input or output
+---
 
+## SQLDataReader
+
+- SqlDataReader reads data in most efficient manner possible.
+
+- SqlDataReader is read-only and forward-only, meaning oce you read a record and go to next record there is no way of going back
+  
+- The forward-only is what makes it efficient choice to read data.
+
+- SqlDataReader is connection-oriented meaning it requires an active connection to the data source  while reading the data.
+
+- We cannot create a instance using a new operator for SqlDataReader.
+
+- ExecuteReader() method creates and returns the instance of SqlDataReader.
+
+- If there is no open connection before SqlDataReader then it will generate run time error.
+
+- SqlDataReader must be closed in a timely fashion, there are two ways to close the SqlDataReader **Using** and **Finally** block.
 
 
 
