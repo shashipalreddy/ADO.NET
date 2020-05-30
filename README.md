@@ -83,7 +83,7 @@
 - Then in the code to read connection string use the configurationManager class  
    `string connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;`
    
-- Now we can use the connectionString directly in the sql connection as below
+- Now we can use the connectionString directly in the sql connection  
    `SqlConnection connection = new SqlConnection(connectionString)`
    
 ---
