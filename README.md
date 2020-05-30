@@ -335,6 +335,84 @@
           GridView2.DataBind();
 
       }
+---
+
+## SqlCommandBuilder
+
+- SqlCommandBuilder automatically generates Insert, Update and Delete SQL Statements based on the SELECT Statement for a single table.
+
+- It eliminates the need to write the commands. It reduces the likelihood of errors.
+
+- The OleDbCommandBuilder, SqlCommonBuilder, and OdbcCommandBuilder classes represent the CommonBuilder object in the OleDb, Sql, and     ODBC data providers. 
+
+- Creating a CommonedBuider object is simple. You pass a DataAdapter as an argument of the CommandBuilder constructor. For example:
+  `SqlCommandBuilder builder = new SqlCommandBuilder(adapter);`
+
+- Example of inserting data using SqlCommandBuilder
+  
+      string connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
+      using (SqlConnection con = new SqlConnection(connectionString))
+      {
+          SqlDataAdapter da = new SqlDataAdapter("select * from Employee;", con);
+
+          SqlCommandBuilder commandBuilder = new SqlCommandBuilder(da);
+
+          DataSet ds = new DataSet();
+          da.Fill(ds, "Employee");
+
+          DataTable EmployeeTable = ds.Tables["Employee"];
+          DataRow row = EmployeeTable.NewRow();
+          row["Name"] = "Shashi";
+          row["Gender"] = "Male";
+          row["Salary"] = 4500;
+          EmployeeTable.Rows.Add(row);
+
+          da.Update(ds, "Employee");
+
+
+      }
+
+- Example of deleting data using SqlCommandBuilder
+
+      string connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
+      using (SqlConnection con = new SqlConnection(connectionString))
+      {
+          SqlDataAdapter MyDataAdapter = new SqlDataAdapter("SELECT * FROM Employee where EmployeeID = 3", con);
+          SqlCommandBuilder MyCmd = new SqlCommandBuilder(MyDataAdapter);
+          DataSet MyDataSet = new DataSet();
+
+          MyDataAdapter.Fill(MyDataSet);
+
+          DataColumn[] MyKey = new DataColumn[1];
+
+          MyKey[0] = MyDataSet.Tables[0].Columns[0];
+          MyDataSet.Tables[0].PrimaryKey = MyKey;
+
+          DataRow FindMyRow = MyDataSet.Tables[0].Rows.Find(1);
+
+          FindMyRow.Delete();
+          MyDataAdapter.Update(MyDataSet);
+
+
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
