@@ -675,8 +675,101 @@ Step 5 : Add a new WebForm to the project. Drag and drop a button control on the
           }
       }
 
+## How to read data from one table and copy it to other table using SQLBulkCopy
 
+Step 1 : Create a new database. Name it SourceDB. Execute the following sql script to create Departments and Employees tables, and to populate with data.
 
+      Create table Departments
+      (
+       ID int primary key identity,
+       Name nvarchar(50),
+       Location nvarchar(50)
+      )
+      GO
+
+      Create table Employees
+      (
+       ID int primary key identity,
+       Name nvarchar(50),
+       Gender nvarchar(50),
+       DepartmentId int foreign key references Departments(Id)
+      )
+      GO
+
+      Insert into Departments values ('IT', 'New York')
+      Insert into Departments values ('HR', 'London')
+      Insert into Departments values ('Payroll', 'Muumbai')
+      GO
+
+      Insert into Employees values ('Mark', 'Male', 1)
+      Insert into Employees values ('John', 'Male', 1)
+      Insert into Employees values ('Mary', 'Female', 2)
+      Insert into Employees values ('Steve', 'Male', 2)
+      Insert into Employees values ('Ben', 'Male', 3)
+      GO
+
+Step 2 : Create another new database. Name it DestinationDB. Execute the sql script to just create Departments and Employees tables. Here we have just the structre of the tables and no data. We will be moving data from SourceDB tables to DestinationDB tables.
+
+      Create table Departments
+      (
+       ID int primary key identity,
+       Name nvarchar(50),
+       Location nvarchar(50)
+      )
+      GO
+
+      Create table Employees
+      (
+       ID int primary key identity,
+       Name nvarchar(50),
+       Gender nvarchar(50),
+       DepartmentId int foreign key references Departments(Id)
+      )
+      GO
+
+Step 3 : Include the following 2 connection strings for the Source and Destination databases in the web.config file of the project 
+     
+      [connectionStrings]
+      [add name="SourceCS" connectionString="server=.;database=SourceDB;Integrated Security=True"
+            providerName="System.Data.SqlClient" /]
+      [add name="DestinationCS" connectionString="server=.;database=DestinationDB;Integrated Security=True"
+            providerName="System.Data.SqlClient" /]
+      [/connectionStrings]
+
+Step 4 : Copy and paste the following code in the button click event handler method in the code-behind file
+
+      string sourceCS = ConfigurationManager.ConnectionStrings["SourceCS"].ConnectionString;
+      string destinationCS = ConfigurationManager.ConnectionStrings["DestinationCS"].ConnectionString;
+      using (SqlConnection sourceCon = new SqlConnection(sourceCS))
+      {
+          SqlCommand cmd = new SqlCommand("Select * from Departments", sourceCon);
+          sourceCon.Open();
+          using (SqlDataReader rdr = cmd.ExecuteReader())
+          {
+              using (SqlConnection destinationCon = new SqlConnection(destinationCS))
+              {
+                  using (SqlBulkCopy bc = new SqlBulkCopy(destinationCon))
+                  {
+                      bc.DestinationTableName = "Departments";
+                      destinationCon.Open();
+                      bc.WriteToServer(rdr);
+                  }
+              }
+          }
+          cmd = new SqlCommand("Select * from Employees", sourceCon);
+          using (SqlDataReader rdr = cmd.ExecuteReader())
+          {
+              using (SqlConnection destinationCon = new SqlConnection(destinationCS))
+              {
+                  using (SqlBulkCopy bc = new SqlBulkCopy(destinationCon))
+                  {
+                      bc.DestinationTableName = "Employees";
+                      destinationCon.Open();
+                      bc.WriteToServer(rdr);
+                  }
+              }
+          }
+      }
 
 
 
