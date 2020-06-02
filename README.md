@@ -883,7 +883,7 @@ Step 4 : Copy and paste the following code in Program.cs file.
 
 - This means the job is never half done, either all of it is done or nothing is done. Let's understand this with an example.
 
-      When we click "Transfer $10 from Account A1 to Account A2" button, we should subtract 10 from A1 account and add 10 to A2 account. So there will be 2 database UPDATE statements. What do you think will happen if only the first update statement is executed successfully and not the second statement. $10 is deducted from the first account, but not added to the second account. This is definitely not desirable. Either both the statements should succeed or both of them should fail. If one succeeds and other fails we should also rollback the changes made by the first statement to maintain the integrity of the data. This can be achieved using transactions in ado.net.
+>E.g: When we click "Transfer $10 from Account A1 to Account A2" button, we should subtract 10 from A1 account and add 10 to A2 account. So there will be 2 database UPDATE statements. What do you think will happen if only the first update statement is executed successfully and not the second statement. $10 is deducted from the first account, but not added to the second account. This is definitely not desirable. Either both the statements should succeed or both of them should fail. If one succeeds and other fails we should also rollback the changes made by the first statement to maintain the integrity of the data. This can be achieved using transactions in ado.net.
       
       
 
