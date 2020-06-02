@@ -396,7 +396,11 @@
 
       }
 
+---
 
+## AcceptChanges() and RejectChanges()
+
+- you can refer it  [here](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/dataset-datatable-dataview/row-states-and-row-versions?redirectedfrom=MSDN)
 
 
 
