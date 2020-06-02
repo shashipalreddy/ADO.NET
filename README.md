@@ -401,11 +401,161 @@
 ## AcceptChanges() and RejectChanges()
 
 - you can refer it  [here](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/dataset-datatable-dataview/row-states-and-row-versions?redirectedfrom=MSDN)
+---
+
+## Strongly Typed Dataset
+
+- Strongly typed dataset is generated based on database schema.
+
+- Strongly typed dataset derives from dataset.
+
+- In a strongly typed dataset the database table columns become properties and the type associated with each column is known at design     time.
+
+### Advantage of using strongly typed datasets over untyped datasets
+
+Since, in a strongly typed dataset the database table columns become properties and the type associated with each column is known at design time, 
+
+- Development is much easier as we will have intellisense 
+
+- Any errors related to misspelt column names can be detected at compile time, rather than at runtime
+
+### Steps to generate a typed dataset using visual studio
+1. Right click on the Project Name in solution explorer and select "Add - New Item"
+2. Select "DataSet", give it a meaningful name and click "Add". This should add a file with .XSD extension.
+3. Click on "View" menu item in Visual Studio and select "Server Explorer"
+4. In "Server Explorer", expand "Data Connections", then expand the "Database", and then expand "Tables"
+5. Drag and drop the table based on which you want to generate a strongly typed dataset.
+
+ASPX code for both WebForm1.aspx and WebForm2.aspx
+
+         <div style="font-family:Arial">
+             <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
+             <asp:Button ID="Button1" runat="server" Text="Button" 
+                 onclick="Button1_Click" />
+             <asp:GridView ID="GridView1" runat="server">
+             </asp:GridView>
+         </div>
+
+         Student class used in the demo
+         public class Student
+         {
+             public int ID { get; set; }
+             public string Name { get; set; }
+             public string Gender { get; set; }
+             public int TotalMarks { get; set; }
+         }
+
+         Please make sure to include the following using declarations on WebForm1.aspx.cs
+         using System.Configuration;
+         using System.Data;
+         using System.Data.SqlClient;
+
+         WebForm1.aspx.cs code:
+         public partial class WebForm1 : System.Web.UI.Page
+         {
+             protected void Page_Load(object sender, EventArgs e)
+             {
+                 if (!IsPostBack)
+                 {
+                     string connectionString =
+                     ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+                     SqlConnection connection = new SqlConnection(connectionString);
+                     string selectQuery = "Select * from tblStudents";
+                     SqlDataAdapter dataAdapter = new SqlDataAdapter(selectQuery, connection);
+
+                     DataSet dataSet = new DataSet();
+                     dataAdapter.Fill(dataSet, "Students");
+
+                     Session["DATASET"] = dataSet;
+
+                     GridView1.DataSource = from dataRow in dataSet.Tables["Students"].AsEnumerable() 
+                         select new Student 
+                         { 
+                             ID = Convert.ToInt32(dataRow["Id"]), 
+                             Name = dataRow["Name"].ToString(), 
+                             Gender = dataRow["Gender"].ToString(), 
+                             TotalMarks = Convert.ToInt32(dataRow["TotalMarks"]) 
+                         };
+                     GridView1.DataBind();
+                 }
+             }
+
+             protected void Button1_Click(object sender, EventArgs e)
+             {
+                 DataSet dataSet = (DataSet)Session["DATASET"];
+
+                 if (string.IsNullOrEmpty(TextBox1.Text))
+                 {
+                     GridView1.DataSource = from dataRow in dataSet.Tables["Students"].AsEnumerable() 
+                         select new Student 
+                         { 
+                             ID = Convert.ToInt32(dataRow["Id"]), 
+                             Name = dataRow["Name"].ToString(), 
+                             Gender = dataRow["Gender"].ToString(), 
+                             TotalMarks = Convert.ToInt32(dataRow["TotalMarks"]) 
+                         };
+                     GridView1.DataBind();
+                 }
+                 else
+                 {
+                     GridView1.DataSource = from dataRow in dataSet.Tables["Students"].AsEnumerable() 
+                         where dataRow["Name"].ToString().ToUpper().StartsWith(TextBox1.Text.ToUpper()) 
+                         select new Student 
+                         { 
+                             ID = Convert.ToInt32(dataRow["Id"]), 
+                             Name = dataRow["Name"].ToString(), 
+                             Gender = dataRow["Gender"].ToString(), 
+                             TotalMarks = Convert.ToInt32(dataRow["TotalMarks"]) 
+                         };
+                     GridView1.DataBind();
+                 }
+             }
+         }
+
+         WebForm2.aspx.cs code:
+         public partial class WebForm2 : System.Web.UI.Page
+         {
+             protected void Page_Load(object sender, EventArgs e)
+             {
+                 if (!IsPostBack)
+                 {
+                     StudentDataSetTableAdapters.StudentsTableAdapter studentsTableAdapter = 
+                         new StudentDataSetTableAdapters.StudentsTableAdapter();
 
 
 
+                     StudentDataSet.StudentsDataTable studentsDataTable = 
+                         new StudentDataSet.StudentsDataTable();
+                     studentsTableAdapter.Fill(studentsDataTable);
 
+                     Session["DATATABLE"] = studentsDataTable;
 
+                     GridView1.DataSource = from student in studentsDataTable 
+                         select new { student.ID, student.Name, student.Gender, student.TotalMarks };
+                     GridView1.DataBind();
+                 }
+             }
+
+             protected void Button1_Click(object sender, EventArgs e)
+             {
+                 StudentDataSet.StudentsDataTable studentsDataTable = 
+                     (StudentDataSet.StudentsDataTable)Session["DATATABLE"];
+
+                 if (string.IsNullOrEmpty(TextBox1.Text))
+                 {
+                     GridView1.DataSource = from student in studentsDataTable 
+                         select new { student.ID, student.Name, student.Gender, student.TotalMarks };
+                     GridView1.DataBind();
+                 }
+                 else
+                 {
+                     GridView1.DataSource = from student in studentsDataTable 
+                         where student.Name.ToUpper().StartsWith(TextBox1.Text.ToUpper()) 
+                         select new { student.ID, student.Name, student.Gender, student.TotalMarks };
+                     GridView1.DataBind();
+                 }
+             }
+         }
 
 
 
