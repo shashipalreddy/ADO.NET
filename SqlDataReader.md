@@ -16,30 +16,30 @@ To create a program using SqlDataAdapter step by step:
 
     1.Insert Query:
     
-        --- Stored Procedure For Inserting
-        create procedure spAddEmployee
-        @Name nvarchar(250),
-        @Gender nvarchar(250),
-        @Salary int,
-        @EmpID int out
-        as 
-        Begin
-          insert into Employee values(@Name, @Gender, @Salary);
-          Select @EmpID = Scope_Identity();
-        End
+           --- Stored Procedure For Inserting
+           create procedure spAddEmployee
+           @Name nvarchar(250),
+           @Gender nvarchar(250),
+           @Salary int,
+           @EmpID int out
+           as 
+           Begin
+             insert into Employee values(@Name, @Gender, @Salary);
+             Select @EmpID = Scope_Identity();
+           End
     
     2. Update Query:
 
-      --- Stored Procedure to Update an Employee
-      Create Procedure spUpdateEmployee
-      @EmpID int,
-      @Name nvarchar(250),
-      @Gender nvarchar(25 0),
-      @Salary int
-      as
-      Begin
-        update Employee set Name = @Name, Gender = @Gender, Salary = @Salary where EmpId = @EmpID;
-      End
+           --- Stored Procedure to Update an Employee
+           Create Procedure spUpdateEmployee
+           @EmpID int,
+           @Name nvarchar(250),
+           @Gender nvarchar(25 0),
+           @Salary int
+           as
+           Begin
+           update Employee set Name = @Name, Gender = @Gender, Salary = @Salary where EmpId = @EmpID;
+           End
       
   3. Delete Query:
    
